@@ -7,10 +7,13 @@ import IconButton from "@mui/material/IconButton";
 import StarIcon from "@mui/icons-material/Star";
 import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
-import Thumbnail from '../../../components/Thumbnail';
+import Thumbnail from "../../../components/Thumbnail";
 import { useDispatch, useSelector } from "react-redux";
 import { addProjectAsync } from "../../../features/project/projectSlice";
-import { uploadFileAsync, getImageUrlAsync } from "../../../features/workspace/workspaceSlice";
+import {
+  uploadFileAsync,
+  getImageUrlAsync,
+} from "../../../features/workspace/workspaceSlice";
 
 const style = {
   position: "absolute",
@@ -25,16 +28,20 @@ const style = {
   p: 4,
 };
 
-const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) => {
+const NewWorkspaceProjectModel = ({
+  handleClose,
+  workspace,
+  onProjectCreated,
+}) => {
   const dispatch = useDispatch();
-  const creatorUserID = useSelector((state) => state?.user?.loggedInUser?.user?._id);
+  const creatorUserID = useSelector((state) => state?.user?.loggedInUser?._id);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageKey, setImageKey] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageKey, setImageKey] = useState("");
 
   const handleFileUploadClick = () => {
     fileInputRef.current.click();
@@ -43,7 +50,7 @@ const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) 
   const validateForm = () => {
     const newErrors = {};
     if (!name) {
-      newErrors.name = 'Project Name is required';
+      newErrors.name = "Project Name is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -55,11 +62,13 @@ const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) 
       let finalImageKey = imageKey;
       if (!selectedImage) {
         try {
-          const response = await dispatch(getImageUrlAsync("1717579493959-projectimages.jpg"));
+          const response = await dispatch(
+            getImageUrlAsync("1717579493959-projectimages.jpg")
+          );
           finalImageUrl = response.payload.presignedUrl;
           finalImageKey = response.payload.imgKey;
         } catch (error) {
-          console.error('Error generating pre-signed URL:', error);
+          console.error("Error generating pre-signed URL:", error);
           return;
         }
       }
@@ -72,13 +81,13 @@ const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) 
         imgKey: finalImageKey,
         creatorUserID: creatorUserID,
       };
-      
+
       try {
         await dispatch(addProjectAsync(projectData));
         onProjectCreated(); // Call the callback to refresh projects
         handleClose();
       } catch (error) {
-        console.error('Error creating project:', error);
+        console.error("Error creating project:", error);
       }
     }
   };
@@ -92,14 +101,14 @@ const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) 
       };
       reader.readAsDataURL(file);
       const formData = new FormData();
-      formData.append('file', file);
-      
+      formData.append("file", file);
+
       try {
         const response = await dispatch(uploadFileAsync(formData));
         setImageUrl(response.payload.presignedUrl);
         setImageKey(response.payload.imgKey);
       } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error("Error uploading image:", error);
       }
     }
   };
@@ -152,11 +161,7 @@ const NewWorkspaceProjectModel = ({ handleClose, workspace, onProjectCreated }) 
         }}
         onClick={handleFileUploadClick}
       >
-        <Thumbnail
-          selectedImage={selectedImage}
-          width={80}
-          height={80}
-        />
+        <Thumbnail selectedImage={selectedImage} width={80} height={80} />
         <input
           type="file"
           ref={fileInputRef}

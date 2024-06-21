@@ -9,13 +9,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
-import Protected from "./components/Protected";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Loading from "./components/Loading";
-import AIInputPage from "./pages/AI/AIInputPage";
-import TaskList from "./pages/AI/TaskCarousel/TaskList";
 import { SidebarProvider } from "./context/SidebarContext";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+
 // Lazy load the pages
 const ProjectPage = lazy(() => import("./pages/Project/ProjectPage"));
 const LandingPage = lazy(() => import("./pages/landingPage/LandingPage"));
@@ -45,6 +43,8 @@ const ConfirmationPage = lazy(() =>
 const ProfileSettingsPage = lazy(() =>
   import("./pages/ProfilePage/ProfilePage")
 );
+const AIInputPage = lazy(() => import("./pages/AI/AIInputPage"));
+const TaskList = lazy(() => import("./pages/AI/TaskCarousel/TaskList"));
 
 const theme = createTheme({
   typography: {
@@ -62,7 +62,7 @@ function AppLayout() {
     "/verification",
     "/resetpassword",
     "/confirmation",
-    "/*",
+    "*",
   ].includes(location.pathname);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -70,6 +70,8 @@ function AppLayout() {
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  const isLoggedIn = sessionStorage.getItem("token");
 
   return (
     <>
@@ -111,23 +113,28 @@ function AppLayout() {
               <Route path="/verification" element={<VerificationPage />} />
               <Route path="/resetpassword" element={<ResetPasswordPage />} />
               <Route path="/confirmation" element={<ConfirmationPage />} />
-              <Route element={<Protected />}>
-                <Route path="/projects" element={<ProjectPage />} />
-                <Route path="/projects/:id" element={<Board />} />
-                <Route
-                  path="/projects/:id/new-task"
-                  element={<NewTaskPage />}
-                />
-                <Route path="/tasks/:taskID" element={<TaskDetailsPage />} />
-                <Route path="/workspaces" element={<WorkspacesPage />} />
-                <Route path="/workspaces/:id" element={<WorkspaceDetails />} />
-                <Route path="/my-tasks" element={<MyTaskPage />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/settings" element={<ProfileSettingsPage />} />
-                <Route path="/createai" element={<AIInputPage />} />
-                <Route path="/task-carousel" element={<TaskList />} />
-              </Route>
-              <Route path="/*" element={<ErrorPage />} />
+              {isLoggedIn ? (
+                <>
+                  <Route path="/projects" element={<ProjectPage />} />
+                  <Route path="/projects/:id" element={<Board />} />
+                  <Route
+                    path="/projects/:id/new-task"
+                    element={<NewTaskPage />}
+                  />
+                  <Route path="/tasks/:taskID" element={<TaskDetailsPage />} />
+                  <Route path="/workspaces" element={<WorkspacesPage />} />
+                  <Route
+                    path="/workspaces/:id"
+                    element={<WorkspaceDetails />}
+                  />
+                  <Route path="/my-tasks" element={<MyTaskPage />} />
+                  <Route path="/calendar" element={<CalendarPage />} />
+                  <Route path="/settings" element={<ProfileSettingsPage />} />
+                  <Route path="/createai" element={<AIInputPage />} />
+                  <Route path="/task-carousel" element={<TaskList />} />
+                </>
+              ) : null}
+              <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Suspense>
         </main>

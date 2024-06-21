@@ -25,7 +25,7 @@ const Attachments = styled("img")({
 const TaskModal = ({ open, handleClose, task }) => {
   const [currentComment, setCurrentComment] = useState("");
   const dispatch = useDispatch();
-  const user = useSelector((state) => state?.user?.loggedInUser?.user);
+  const user = useSelector((state) => state?.user?.loggedInUser);
 
   const handleUpdateTask = () => {
     if (currentComment.trim()) {

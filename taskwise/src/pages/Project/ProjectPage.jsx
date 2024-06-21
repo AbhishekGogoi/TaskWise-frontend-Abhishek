@@ -69,7 +69,6 @@ const CustomBox = styled(Box)(({ theme }) => ({
   "scrollbar-width": "none", // Firefox
 }));
 
-
 function ProjectPage() {
   const [isModalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -79,10 +78,14 @@ function ProjectPage() {
   );
 
   const workspaces = useSelector((state) => state?.workspace?.workspaces);
-  const workspaceFetchStatus = useSelector((state) => state?.workspace?.workspaceFetchStatus)
-  const projectFetchStatus = useSelector((state) => state?.project?.projectFetchStatus)
+  const workspaceFetchStatus = useSelector(
+    (state) => state?.workspace?.workspaceFetchStatus
+  );
+  const projectFetchStatus = useSelector(
+    (state) => state?.project?.projectFetchStatus
+  );
   // console.log(projectData);
-  const userId = useSelector((state) => state?.user?.loggedInUser?.user?._id);
+  const userId = useSelector((state) => state?.user?.loggedInUser?._id);
   const [searchQuery, setSearchQuery] = useState("");
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -161,7 +164,9 @@ function ProjectPage() {
               variant="contained"
               size="small"
               sx={{
-                fontSize: "0.70rem", padding: "4px 8px", backgroundColor: "#00c6ff",
+                fontSize: "0.70rem",
+                padding: "4px 8px",
+                backgroundColor: "#00c6ff",
                 backgroundImage: "linear-gradient(120deg, #00c6ff, #8e71df)",
                 color: "#fff",
               }}
@@ -193,7 +198,7 @@ function ProjectPage() {
           </Search>
         </Box>
       </Paper>
-      {(projectData?.length <= 0 && projectFetchStatus === "fulfilled") ? (
+      {projectData?.length <= 0 && projectFetchStatus === "fulfilled" ? (
         <Box
           sx={{
             display: "flex",

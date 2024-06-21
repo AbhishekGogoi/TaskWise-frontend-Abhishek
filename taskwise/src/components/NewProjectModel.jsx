@@ -14,7 +14,11 @@ import PropTypes from "prop-types";
 import ProjectThumbnail from "../pages/Project/ProjectThumbnail";
 import { useDispatch, useSelector } from "react-redux";
 import { addProjectAsync } from "../features/project/projectSlice";
-import { fetchWorkspaceByUserIDAsync, uploadFileAsync, getImageUrlAsync } from "../features/workspace/workspaceSlice";
+import {
+  fetchWorkspaceByUserIDAsync,
+  uploadFileAsync,
+  getImageUrlAsync,
+} from "../features/workspace/workspaceSlice";
 
 const style = {
   position: "absolute",
@@ -31,15 +35,15 @@ const style = {
 
 const NewProjectModel = ({ handleClose }) => {
   const dispatch = useDispatch();
-  const creatorUserID = useSelector((state) => state?.user?.loggedInUser?.user?._id);
+  const creatorUserID = useSelector((state) => state?.user?.loggedInUser?._id);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [workspace, setWorkspace] = useState('');
+  const [workspace, setWorkspace] = useState("");
   const fileInputRef = useRef(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageKey, setImageKey] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageKey, setImageKey] = useState("");
 
   const workspaces = useSelector((state) => state?.workspace?.workspaces);
 
@@ -56,10 +60,10 @@ const NewProjectModel = ({ handleClose }) => {
   const validateForm = () => {
     const newErrors = {};
     if (!name) {
-      newErrors.name = 'Project Name is required';
+      newErrors.name = "Project Name is required";
     }
     if (!workspace) {
-      newErrors.workspace = 'Assign Workspace is required';
+      newErrors.workspace = "Assign Workspace is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -71,11 +75,13 @@ const NewProjectModel = ({ handleClose }) => {
       let finalImageKey = imageKey;
       if (!selectedImage) {
         try {
-          const response = await dispatch(getImageUrlAsync("1717579493959-projectimages.jpg"));
+          const response = await dispatch(
+            getImageUrlAsync("1717579493959-projectimages.jpg")
+          );
           finalImageUrl = response.payload.presignedUrl;
           finalImageKey = response.payload.imgKey;
         } catch (error) {
-          console.error('Error generating pre-signed URL:', error);
+          console.error("Error generating pre-signed URL:", error);
           return;
         }
       }
@@ -88,12 +94,12 @@ const NewProjectModel = ({ handleClose }) => {
         imgKey: finalImageKey,
         creatorUserID: creatorUserID,
       };
-      
+
       try {
         await dispatch(addProjectAsync(projectData));
         handleClose();
       } catch (error) {
-        console.error('Error creating project:', error);
+        console.error("Error creating project:", error);
       }
     }
   };
@@ -107,14 +113,14 @@ const NewProjectModel = ({ handleClose }) => {
       };
       reader.readAsDataURL(file);
       const formData = new FormData();
-      formData.append('file', file);
-      
+      formData.append("file", file);
+
       try {
         const response = await dispatch(uploadFileAsync(formData));
         setImageUrl(response.payload.presignedUrl);
         setImageKey(response.payload.imgKey);
       } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error("Error uploading image:", error);
       }
     }
   };
@@ -207,7 +213,12 @@ const NewProjectModel = ({ handleClose }) => {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <FormControl fullWidth margin="normal" style={{ marginBottom: "40px" }} error={!!errors.workspace}>
+      <FormControl
+        fullWidth
+        margin="normal"
+        style={{ marginBottom: "40px" }}
+        error={!!errors.workspace}
+      >
         <InputLabel id="assign-workspace-label">Assign Workspace</InputLabel>
         <Select
           labelId="assign-workspace-label"
@@ -225,7 +236,9 @@ const NewProjectModel = ({ handleClose }) => {
             </MenuItem>
           ))}
         </Select>
-        {!!errors.workspace && <Typography color="error">{errors.workspace}</Typography>}
+        {!!errors.workspace && (
+          <Typography color="error">{errors.workspace}</Typography>
+        )}
       </FormControl>
       <Button
         variant="contained"

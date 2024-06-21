@@ -46,7 +46,7 @@ const ChangePasswordModal = ({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const user = useSelector((state) => state.user.loggedInUser.user._id);
+  const user = useSelector((state) => state.user.loggedInUser._id);
 
   const schema = Joi.object({
     currentPassword: Joi.string().required().messages({
@@ -90,7 +90,7 @@ const ChangePasswordModal = ({
 
     const apiUrl =
       process.env.NODE_ENV === "production"
-        ? "https://taskwise-backend.onrender.com/api/auth/changepassword"
+        ? "https://taskwise-backend-abhishek.onrender.com/api/auth/changepassword"
         : "http://localhost:8080/api/auth/changepassword";
 
     try {

@@ -60,7 +60,7 @@ const priorityRenderer = (params) => {
 const TaskPage = () => {
   // eslint-disable-next-line
   const tasksData = useSelector((state) => state.workspace.userTasks) || [];
-  const userId = useSelector((state) => state?.user?.loggedInUser?.user?._id);
+  const userId = useSelector((state) => state?.user?.loggedInUser?._id);
   const fetchTasksByUserIDStatus = useSelector(
     (state) => state.workspace.fetchTasksByUserIDStatus
   );

@@ -23,7 +23,7 @@ import {
   Popover,
   List,
   ListItem,
-  Modal
+  Modal,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast, ToastContainer } from "react-toastify";
@@ -43,7 +43,6 @@ const TabLabelWrapper = styled("div")({
 });
 
 const TaskDetailsPage = () => {
-
   const navigate = useNavigate();
   const { taskID } = useParams();
   const dispatch = useDispatch();
@@ -59,10 +58,7 @@ const TaskDetailsPage = () => {
     createdBy: [],
   });
 
-
-  const pid = useSelector(
-    (state) => state?.project?.selectedProject?.id
-  );
+  const pid = useSelector((state) => state?.project?.selectedProject?.id);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogTitle, setDialogTitle] = useState("");
   const [dialogTab, setDialogTab] = useState(0);
@@ -78,21 +74,28 @@ const TaskDetailsPage = () => {
     setDialogTab(newValue);
   };
 
-  const selectedProject = useSelector((state) => state?.project?.selectedProject);
-  const userId = useSelector((state) => state?.user?.loggedInUser?.user);
+  const selectedProject = useSelector(
+    (state) => state?.project?.selectedProject
+  );
+  const userId = useSelector((state) => state?.user?.loggedInUser);
   const taskData = selectedProject ? selectedProject.tasks : [];
-  const membersData = useSelector((state) => state?.project?.workspaceMembers?.data);
+  const membersData = useSelector(
+    (state) => state?.project?.workspaceMembers?.data
+  );
   //console.log(membersData, "members in task details")
   const filteredTask = taskData?.find((eachData) => eachData?._id === taskID);
   //console.log(filteredTask, "filteredTask");
-  const [currentComment, setCurrentComment] = useState('');
+  const [currentComment, setCurrentComment] = useState("");
   const handleAddNewComment = (event) => {
     const newComment = event.target.value;
     setCurrentComment(newComment);
-  }
-  const isAdmin = membersData?.find((member) => member?.user?.email === userId?.email)?.role === 'Admin';
-  const isCreator = userId?.email === filteredTask?.createdBy?.email ? true : false;
-  const users = membersData?.map(item => item?.user);
+  };
+  const isAdmin =
+    membersData?.find((member) => member?.user?.email === userId?.email)
+      ?.role === "Admin";
+  const isCreator =
+    userId?.email === filteredTask?.createdBy?.email ? true : false;
+  const users = membersData?.map((item) => item?.user);
   const [options] = useState(users);
   //console.log(options, "options")
   const fileInputRef = useRef(null);
@@ -114,20 +117,20 @@ const TaskDetailsPage = () => {
     // Iterate over each file in the event
     Array.from(event.target.files).forEach(async (file) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
       const response = await dispatch(uploadFileAsync(formData));
       const newFileUrl = response.payload.presignedUrl;
       let newFileKey, docType;
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith("image/")) {
         newFileKey = response.payload.imgKey;
-        docType = 'image';
+        docType = "image";
       } else {
         newFileKey = response.payload.fileKey;
-        docType = 'document';
+        docType = "document";
       }
       setUploadedFileUrls((prevUrls) => [
         ...prevUrls,
-        { docType, docName: file.name, docKey: newFileKey, docUrl: newFileUrl }
+        { docType, docName: file.name, docKey: newFileKey, docUrl: newFileUrl },
       ]);
     });
   };
@@ -195,7 +198,7 @@ const TaskDetailsPage = () => {
         ...updatedTaskDetails,
         comments: [...(updatedTaskDetails.comments || []), newComment],
       };
-      setCurrentComment('');
+      setCurrentComment("");
     }
 
     // Check if there are new attachments
@@ -225,7 +228,13 @@ const TaskDetailsPage = () => {
         taskId: taskID,
         id: pid,
       };
-      dispatch(editTaskAsync({ data, idObject, attachments: updatedTaskDetails.attachments }));
+      dispatch(
+        editTaskAsync({
+          data,
+          idObject,
+          attachments: updatedTaskDetails.attachments,
+        })
+      );
       toast.success("Task updated successfully!");
       navigate(-1);
     } else {
@@ -246,19 +255,17 @@ const TaskDetailsPage = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-
-
   const handleItemClick = (option) => {
     //console.log(isAdmin)
     if (isAdmin || isCreator) {
-      const name = "assigneeUserID"
-      const value = option
+      const name = "assigneeUserID";
+      const value = option;
       setTaskDetails((prevDetails) => ({
         ...prevDetails,
         [name]: value,
       }));
     } else {
-      toast.error("Not authorised to reassign the task")
+      toast.error("Not authorised to reassign the task");
     }
     handleClose();
   };
@@ -362,19 +369,21 @@ const TaskDetailsPage = () => {
                     </Grid>
                   ))}
                 </Grid> */}
-                <Typography variant="h6"
+                <Typography
+                  variant="h6"
                   gutterBottom
-                  sx={{ fontWeight: "700", mb: 1, fontSize: "1rem" }}>
+                  sx={{ fontWeight: "700", mb: 1, fontSize: "1rem" }}
+                >
                   Comments ({taskDetails.comments.length})
                 </Typography>
-                {taskDetails.comments.length > 0 &&
+                {taskDetails.comments.length > 0 && (
                   <Box
                     sx={{
-                      maxHeight: '200px',
-                      overflowY: 'auto',
-                      border: '1px solid #ccc',
-                      padding: '8px',
-                      borderRadius: '4px'
+                      maxHeight: "200px",
+                      overflowY: "auto",
+                      border: "1px solid #ccc",
+                      padding: "8px",
+                      borderRadius: "4px",
                     }}
                   >
                     {taskDetails.comments.map((comment, index) => (
@@ -391,7 +400,9 @@ const TaskDetailsPage = () => {
                         </Grid>
                         <Grid item xs>
                           <Box>
-                            <Typography sx={{ cursor: "pointer", fontWeight: 'bold' }}>
+                            <Typography
+                              sx={{ cursor: "pointer", fontWeight: "bold" }}
+                            >
                               <Tooltip title={comment?.user?.email}>
                                 {comment?.user?.username}
                               </Tooltip>
@@ -402,7 +413,7 @@ const TaskDetailsPage = () => {
                       </Grid>
                     ))}
                   </Box>
-                }
+                )}
               </Grid>
 
               <Grid item xs={12} md={6}>
@@ -426,7 +437,6 @@ const TaskDetailsPage = () => {
                         flexGrow: 1,
                         ml: 4,
                       }}
-                     
                     >
                       <Avatar
                         alt="Profile Image"
@@ -434,7 +444,7 @@ const TaskDetailsPage = () => {
                         sx={{
                           width: 20,
                           height: 20,
-                          cursor: "pointer"
+                          cursor: "pointer",
                         }}
                         onClick={handleClick}
                       />
@@ -443,7 +453,7 @@ const TaskDetailsPage = () => {
                         sx={{ ml: 1, cursor: "pointer" }}
                         onClick={handleClick}
                       >
-                        {taskDetails?.assigneeUserID?.email }
+                        {taskDetails?.assigneeUserID?.email}
                       </Typography>
                       <Popover
                         id={id}
@@ -455,13 +465,17 @@ const TaskDetailsPage = () => {
                           horizontal: "center",
                         }}
                         transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center',
+                          vertical: "top",
+                          horizontal: "center",
                         }}
                       >
                         <List>
-                          {options?.map(option => (
-                            <ListItem button key={option?.id} onClick={() => handleItemClick(option)}>
+                          {options?.map((option) => (
+                            <ListItem
+                              button
+                              key={option?.id}
+                              onClick={() => handleItemClick(option)}
+                            >
                               <ListItemAvatar>
                                 <Avatar
                                   alt="Profile Image"
@@ -562,7 +576,9 @@ const TaskDetailsPage = () => {
                           height: 20,
                         }}
                       />
-                      <Typography sx={{ ml: 1 }}>{taskDetails?.createdBy?.email}</Typography>
+                      <Typography sx={{ ml: 1 }}>
+                        {taskDetails?.createdBy?.email}
+                      </Typography>
                     </Box>
                   </Grid>
                   <Grid
@@ -651,7 +667,7 @@ const TaskDetailsPage = () => {
                     <IconButton
                       color="primary"
                       onClick={() => handleDialogOpen()}
-                    // disabled={mediaImages.length === 0 && docs.length === 0}
+                      // disabled={mediaImages.length === 0 && docs.length === 0}
                     >
                       <ChevronRightSharpIcon
                         sx={{ color: "#000000", fontSize: 35, mb: 1, m: 1 }}
@@ -785,19 +801,25 @@ const TaskDetailsPage = () => {
                   </IconButton>
                 </Tabs>
               </Grid>
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 {filteredTask?.attachments.length > 0 ? (
                   <Grid container spacing={1}>
                     {filteredTask.attachments
                       .filter((attachment) => attachment.docType === "image")
                       .map((attachment, index) => (
-                        <Grid item md={4} lg={3} key={index} sx={{ marginBottom: 1, justifyContent: "center" }}>
+                        <Grid
+                          item
+                          md={4}
+                          lg={3}
+                          key={index}
+                          sx={{ marginBottom: 1, justifyContent: "center" }}
+                        >
                           <Card
                             sx={{
-                              width: '100%',
+                              width: "100%",
                               maxWidth: 240,
                               borderRadius: 2,
-                              cursor: "pointer"
+                              cursor: "pointer",
                             }}
                             onClick={() => handleImageClick(attachment.docUrl)}
                           >

@@ -46,7 +46,7 @@ function TaskList() {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
   const aiData = useSelector((state) => state?.ai?.aiData);
-  const user = useSelector((state) => state?.user?.loggedInUser?.user);
+  const user = useSelector((state) => state?.user?.loggedInUser);
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const { workspaceID } = location.state || {};

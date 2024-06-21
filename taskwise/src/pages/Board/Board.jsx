@@ -91,13 +91,13 @@ function Board() {
     navigate(`/projects/${id}/new-task`);
   };
 
-  let user = useSelector((state) => state?.user?.loggedInUser?.user);
+  let user = useSelector((state) => state?.user?.loggedInUser);
   let workspaceMembers = useSelector(
     (state) => state?.project?.workspaceMembers?.data
   );
   // eslint-disable-next-line
   const isAdmin =
-    workspaceMembers?.find((member) => member.user.email === user.email)
+    workspaceMembers?.find((member) => member.user?.email === user.email)
       ?.role === "Admin";
   const [columns, setColumns] = useState({});
   const [isAddColumnModalOpen, setIsAddColumnModalOpen] = useState(false);

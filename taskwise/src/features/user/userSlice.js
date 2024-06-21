@@ -10,6 +10,10 @@ import {
   updateProfile,
 } from "./userApi";
 
+const token = sessionStorage.getItem("token")
+  ? sessionStorage.getItem("token")
+  : null;
+
 const initialState = {
   status: "idle",
   errors: null,
@@ -17,10 +21,10 @@ const initialState = {
   signupError: null,
   loginStatus: "idle",
   loginError: null,
-  loggedInUser: null,
+  loggedInUser: token ? JSON.parse(sessionStorage.getItem("user")) : null, // Ensure user is stored as an object
   successMessage: null,
   isAuthChecked: false, //Indicates if auth check is complete
-  isAuthenticated: false, //Indicates if user is authenticated
+  isAuthenticated: !!token, //Indicates if user is authenticated
   forgotPasswordStatus: "idle",
   forgotPasswordError: null,
   verifyCodeStatus: "idle",
@@ -139,44 +143,6 @@ const userSlice = createSlice({
     clearResendOTPError: (state) => {
       state.resendOTPError = null;
     },
-    // for session management
-    rehydrate: (state) => {
-      const user = localStorage.getItem("user");
-      const isAuthenticated =
-        localStorage.getItem("isAuthenticated") === "true";
-      if (user) {
-        state.isAuthenticated = isAuthenticated;
-        state.loggedInUser = JSON.parse(user);
-      }
-      state.isAuthChecked = true;
-    },
-    // for resetting user data
-    // resetUserState: (state) => {
-    //   Object.assign(state, initialState);
-    //   state.isAuthChecked = true;
-    // },
-    resetUserState: (state) => {
-      // Explicitly reset state properties to their initial values
-      state.status = initialState.status;
-      state.errors = initialState.errors;
-      state.signupStatus = initialState.signupStatus;
-      state.signupError = initialState.signupError;
-      state.loginStatus = initialState.loginStatus;
-      state.loginError = initialState.loginError;
-      state.loggedInUser = initialState.loggedInUser;
-      state.successMessage = initialState.successMessage;
-      state.isAuthenticated = initialState.isAuthenticated;
-      state.forgotPasswordStatus = initialState.forgotPasswordStatus;
-      state.forgotPasswordError = initialState.forgotPasswordError;
-      state.verifyCodeStatus = initialState.verifyCodeStatus;
-      state.verifyCodeError = initialState.verifyCodeError;
-      state.resetPasswordStatus = initialState.resetPasswordStatus;
-      state.resetPasswordError = initialState.resetPasswordError;
-      state.resetEmail = initialState.resetEmail;
-      state.resendOTPStatus = initialState.resendOTPStatus;
-      state.resendOTPError = initialState.resendOTPError;
-      state.isAuthChecked = true; // Keep this true after reset
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -196,11 +162,11 @@ const userSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.loginStatus = "fulfilled";
-        state.loggedInUser = action.payload;
-        // for session management
+        state.loggedInUser = action.payload.user;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
-        localStorage.setItem("user", JSON.stringify(action.payload));
-        localStorage.setItem("isAuthenticated", true);
+        sessionStorage.setItem("token", action.payload.token);
+        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.loginStatus = "rejected";
@@ -212,29 +178,10 @@ const userSlice = createSlice({
       .addCase(logoutAsync.fulfilled, (state) => {
         state.status = "fulfilled";
         state.loggedInUser = null;
-        // for session management
+        state.token = null;
         state.isAuthenticated = false;
-        localStorage.removeItem("user");
-        localStorage.removeItem("isAuthenticated");
-        // Object.assign(state, initialState);
-        state.status = initialState.status;
-        state.errors = initialState.errors;
-        state.signupStatus = initialState.signupStatus;
-        state.signupError = initialState.signupError;
-        state.loginStatus = initialState.loginStatus;
-        state.loginError = initialState.loginError;
-        state.loggedInUser = initialState.loggedInUser;
-        state.successMessage = initialState.successMessage;
-        state.forgotPasswordStatus = initialState.forgotPasswordStatus;
-        state.forgotPasswordError = initialState.forgotPasswordError;
-        state.verifyCodeStatus = initialState.verifyCodeStatus;
-        state.verifyCodeError = initialState.verifyCodeError;
-        state.resetPasswordStatus = initialState.resetPasswordStatus;
-        state.resetPasswordError = initialState.resetPasswordError;
-        state.resetEmail = initialState.resetEmail;
-        state.resendOTPStatus = initialState.resendOTPStatus;
-        state.resendOTPError = initialState.resendOTPError;
-        state.isAuthChecked = true; // Keep this true after logout
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
       })
       .addCase(logoutAsync.rejected, (state, action) => {
         state.status = "rejected";
@@ -291,11 +238,10 @@ const userSlice = createSlice({
       })
       .addCase(updateProfileAsync.fulfilled, (state, action) => {
         state.status = "fulfilled";
-        state.loggedInUser = action.payload;
+        state.loggedInUser = action.payload.user;
         state.successMessage = action.payload.message;
         state.isAuthenticated = true;
-        localStorage.setItem("user", JSON.stringify(action.payload));
-        localStorage.setItem("isAuthenticated", true);
+        sessionStorage.setItem("user", JSON.stringify(action.payload.user));
       })
       .addCase(updateProfileAsync.rejected, (state, action) => {
         state.status = "rejected";
@@ -319,8 +265,6 @@ export const {
   clearResetPasswordError,
   resetResendOTPStatus,
   clearResendOTPError,
-  rehydrate,
-  resetUserState,
 } = userSlice.actions;
 
 export default userSlice.reducer;

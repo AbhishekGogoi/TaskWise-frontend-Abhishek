@@ -90,19 +90,13 @@ const PageWrapper = styled(Box)({
 
 const ProfileSettingsPage = () => {
   const dispatch = useDispatch();
-  const email = useSelector((state) => state.user.loggedInUser?.user?.email);
-  const imageUrl = useSelector(
-    (state) => state.user.loggedInUser?.user?.imgUrl
-  );
+  const email = useSelector((state) => state.user.loggedInUser?.email);
+  const imageUrl = useSelector((state) => state.user.loggedInUser?.imgUrl);
 
-  const username = useSelector(
-    (state) => state.user.loggedInUser?.user?.username
-  );
+  const username = useSelector((state) => state.user.loggedInUser?.username);
   const successMessage = useSelector((state) => state.user.successMessage);
 
-  const tempTitle = useSelector(
-    (state) => state.user.loggedInUser?.user?.title
-  );
+  const tempTitle = useSelector((state) => state.user.loggedInUser?.title);
 
   const [title, setTitle] = useState(tempTitle);
 
@@ -118,7 +112,7 @@ const ProfileSettingsPage = () => {
     setChangePasswordModalOpen(false);
   };
 
-  const userId = useSelector((state) => state.user.loggedInUser?.user?._id);
+  const userId = useSelector((state) => state.user.loggedInUser?._id);
 
   const handleSubmit = () => {
     setIsButtonDisabled(true);

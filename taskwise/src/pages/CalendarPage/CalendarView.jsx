@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import moment from 'moment';
-import TaskModal from '../../components/TaskModal';
-import CustomToolbar from './CustomToolbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTasksByUserIDAsync } from '../../features/workspace/workspaceSlice';
+import React, { useEffect, useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import moment from "moment";
+import TaskModal from "../../components/TaskModal";
+import CustomToolbar from "./CustomToolbar";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTasksByUserIDAsync } from "../../features/workspace/workspaceSlice";
 
 const localizer = momentLocalizer(moment);
 
 const CalendarView = () => {
   const events = useSelector((state) => state.workspace.userTasks) || [];
-  const userId = useSelector((state) => state?.user?.loggedInUser?.user?._id);
+  const userId = useSelector((state) => state?.user?.loggedInUser?._id);
   const [selectedTask, setSelectedTask] = useState(null);
   // eslint-disable-next-line
   const [selectedDateTasks, setSelectedDateTasks] = useState([]);
@@ -30,11 +30,11 @@ const CalendarView = () => {
   };
 
   const handleCellClick = (date) => {
-    const tasksOnDate = events.filter(
-      (e) => moment(e.start).isSame(date, 'day')
+    const tasksOnDate = events.filter((e) =>
+      moment(e.start).isSame(date, "day")
     );
-    console.log("tasksOnDate:", tasksOnDate)
-    console.log("date:", date)
+    console.log("tasksOnDate:", tasksOnDate);
+    console.log("date:", date);
     setSelectedDate(date);
     setSelectedDateTasks(tasksOnDate);
     setIsPanelOpen(true);
@@ -42,14 +42,14 @@ const CalendarView = () => {
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'High':
-        return 'red';
-      case 'Medium':
-        return 'orange';
-      case 'Low':
-        return 'green';
+      case "High":
+        return "red";
+      case "Medium":
+        return "orange";
+      case "Low":
+        return "green";
       default:
-        return 'gray';
+        return "gray";
     }
   };
 
@@ -76,12 +76,12 @@ const CalendarView = () => {
 
     const style = {
       backgroundColor: backgroundColor,
-      borderRadius: '5px',
+      borderRadius: "5px",
       opacity: 0.8,
-      color: 'white',
-      border: 'none',
-      display: 'block',
-      textAlign: 'left',
+      color: "white",
+      border: "none",
+      display: "block",
+      textAlign: "left",
     };
 
     return {
@@ -103,14 +103,14 @@ const CalendarView = () => {
   );
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <div style={{ height: 500, flexGrow: 1 }}>
         <Calendar
           localizer={localizer}
           events={mappedEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ margin: 'auto' }}
+          style={{ margin: "auto" }}
           onSelectEvent={handleSelectEvent}
           selectable
           eventPropGetter={eventStyleGetter}
@@ -128,8 +128,14 @@ const CalendarView = () => {
         />
       </div>
       {isPanelOpen && (
-        <div style={{ width: '200px', padding: '10px', borderLeft: '1px solid #ccc' }}>
-          <h4>Tasks for {moment(selectedDate).format('MMMM Do YYYY')}</h4>
+        <div
+          style={{
+            width: "200px",
+            padding: "10px",
+            borderLeft: "1px solid #ccc",
+          }}
+        >
+          <h4>Tasks for {moment(selectedDate).format("MMMM Do YYYY")}</h4>
           <h6>Work in progress...</h6>
           {/* <ul>
             {selectedDateTasks.length > 0 ? (
