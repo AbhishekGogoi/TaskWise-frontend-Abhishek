@@ -238,7 +238,7 @@ function TaskList() {
                 xs: 5, // Small screens (e.g., mobile)
                 sm: 6, // Small to medium screens
                 md: 10, // Medium to large screens
-                lg: 15, // Large screens
+                lg: 28, // Large screens
               },
             }}
           >
@@ -250,7 +250,6 @@ function TaskList() {
                 borderRadius: 1,
                 padding: theme.spacing(1),
                 fontSize: "1.5rem",
-                marginTop: "22rem",
               }}
             >
               Feel free to edit the tasks to your liking!
@@ -271,8 +270,6 @@ function TaskList() {
           className="corner-btn"
           sx={{
             marginRight: "8px",
-            marginTop: "25rem",
-            marginLeft: "15rem",
             fontWeight: "bold",
             left: "0",
             borderRadius: "16px",
@@ -288,8 +285,7 @@ function TaskList() {
           variant="contained"
           className="corner-btn generate-board-btn"
           sx={{
-            marginRight: "2rem",
-            marginTop: "25rem",
+            marginRight: "0.5px",
             fontWeight: "bold",
             right: "0",
             borderRadius: "16px",
