@@ -90,7 +90,7 @@ const ShareJoiningLinkModal = ({ handleClose }) => {
               mb: isSmallScreen ? 1 : 0,
             }}
           >
-            https://taskwiseai.netlify.app/signup
+            https://taskwiseapp.netlify.app/signup
           </Typography>
           <Button
             variant="contained"

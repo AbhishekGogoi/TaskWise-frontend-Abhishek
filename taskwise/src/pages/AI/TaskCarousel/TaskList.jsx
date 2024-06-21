@@ -250,6 +250,7 @@ function TaskList() {
                 borderRadius: 1,
                 padding: theme.spacing(1),
                 fontSize: "1.5rem",
+                marginTop: "22rem",
               }}
             >
               Feel free to edit the tasks to your liking!
@@ -270,6 +271,8 @@ function TaskList() {
           className="corner-btn"
           sx={{
             marginRight: "8px",
+            marginTop: "25rem",
+            marginLeft: "15rem",
             fontWeight: "bold",
             left: "0",
             borderRadius: "16px",
@@ -285,7 +288,8 @@ function TaskList() {
           variant="contained"
           className="corner-btn generate-board-btn"
           sx={{
-            marginRight: "0.5px",
+            marginRight: "2rem",
+            marginTop: "25rem",
             fontWeight: "bold",
             right: "0",
             borderRadius: "16px",
