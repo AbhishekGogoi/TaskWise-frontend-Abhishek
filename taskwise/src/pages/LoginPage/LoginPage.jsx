@@ -100,11 +100,6 @@ const StyledButton = styled(Button)({
   fontSize: "1rem", // Adjust font size (optional)
 });
 
-const GuestStyledButton = styled(Button)({
-  height: 50, // Increase button height
-  fontSize: "1rem",
-});
-
 // Component
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -112,7 +107,6 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
-  const [guestLoading, setGuestLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -165,12 +159,6 @@ const LoginPage = () => {
     setLoginLoading(true); // Set loading state to true
     dispatch(loginAsync({ email, password }));
     setIsButtonDisabled(true); // Disable the button after login attempt
-  };
-
-  const handleGuestLogin = (e) => {
-    e.preventDefault();
-    setGuestLoading(true);
-    dispatch(loginAsync({ email: "guest", password: "guest" }));
   };
 
   useEffect(() => {
@@ -291,23 +279,6 @@ const LoginPage = () => {
             "Log In"
           )}
         </StyledButton>
-        <GuestStyledButton
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{
-            marginTop: "1rem",
-            backgroundColor: "#0062ff",
-            "&:hover": { backgroundColor: "#303f9f" },
-          }}
-          onClick={handleGuestLogin}
-        >
-          {guestLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Guest Login"
-          )}
-        </GuestStyledButton>
         <StyledLink
           onClick={handleForgotPasswordClick}
           variant="body2"
